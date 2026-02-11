@@ -91,4 +91,28 @@ public class ClienteDao extends DBConnect {
             this.fecharConexao(1);
         }
     }
+
+    /**
+     * Obtém um cliente pelo código dele
+     * @param codigo
+     * @return O método retorna {@code ClienteDto}
+     */
+    public ClienteDto obterCliente(int codigo){
+        ClienteDto cliente = new ClienteDto();
+        try {
+            stmt = this.conectar().createStatement();
+            rst = stmt.executeQuery("SELECT * FROM clientes WHERE id_cliente = " +codigo+ ";");
+            while(rst.next()){
+                cliente = new ClienteDto();
+                cliente.setCodigo(rst.getInt("id_cliente"));
+                cliente.setCpf(rst.getInt("cpf_cliente"));
+                cliente.setNome(rst.getString("nome_cliente"));
+                cliente.setDataNascimento(rst.getDate("data_nascimento"));
+            }
+            return cliente;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }

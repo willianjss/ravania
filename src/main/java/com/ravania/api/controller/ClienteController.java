@@ -66,4 +66,17 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
     }
+
+    @GetMapping("/obter")
+    private ResponseEntity<ClienteDto> obterCliente(@RequestParam(name = "codigo", required = true) final int codigo){
+        try {
+            ClienteDto cliente = new ClienteDao().obterCliente(codigo);
+            LOGGER.log(Level.FINE, "Cliente encontrado com sucesso.");
+            return ResponseEntity.ok(cliente);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            LOGGER.log(Level.WARNING, "Ocorreu um erro ao buscar o cliente no banco de dados: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+    }
 }
