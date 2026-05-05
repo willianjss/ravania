@@ -1,0 +1,47 @@
+* {
+    font-family: "Google Sans", sans-serif;
+    font-size: 20px;
+}
+
+.titulo {
+    border: 10px;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgb(27, 27, 89);
+    font-size: 30px;
+    color: coral;
+}
+
+h1 {
+    font-size: 30px;
+    color: coral;
+}
+
+h2 {
+    font-size: 20px;
+
+}
+
+table, td, th {
+    border: 3px, solid, black;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+}
+
+.tabela {
+    border-collapse: collapse;
+    border-radius: 5px;
+    border: 3px, solid, black;
+}
+
+.cabecalho-tabela {
+    background-color: coral;
+    border: 3px, solid, black;
+    padding: 20px;
+}
+
+.conteudo-tabela {
+    border: 1px, solid, black;
+    padding: 20px;
+}
