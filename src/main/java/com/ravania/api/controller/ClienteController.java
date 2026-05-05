@@ -13,6 +13,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/clientes")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ClienteController {
     public static final Logger LOGGER = Logger.getLogger(ClienteController.class.getName());
 
@@ -31,19 +32,25 @@ public class ClienteController {
                 ArrayList<ClienteDto> listaClientes = new ClienteDao().obterListaClientes();
                 LOGGER.log(Level.FINE,"Lista de clientes retornada com sucesso.");
                 return ResponseEntity.ok(listaClientes);
+            } catch (NullPointerException ex) {
+                LOGGER.log(Level.WARNING, "Não há registros no banco de dados.");
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             } catch (Exception e) {
                 assert LOGGER != null;
                 LOGGER.log(Level.WARNING, "Ocorreu um erro ao buscar os clientes no banco de dados: "+e.getMessage());
-                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         } else {
             try {
                 ArrayList<ClienteDto> listaClientes = new ClienteDao().obterListaClientes(nome);
                 LOGGER.log(Level.FINE,"Lista de clientes retornada com sucesso.");
                 return ResponseEntity.ok(listaClientes);
+            } catch (NullPointerException ex) {
+                LOGGER.log(Level.WARNING, "Não há registros no banco de dados.");
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "Ocorreu um erro ao buscar os clientes no banco de dados: "+e.getMessage());
-                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         }
     }
@@ -58,6 +65,7 @@ public class ClienteController {
     @PostMapping("/incluir")
     private ResponseEntity<ClienteDto> incluirClientes(@RequestBody final ClienteDto clienteDto){
         ClienteDao clienteDao = new ClienteDao();
+        //System.out.println(clienteDto.getNome() + clienteDto.getDataNascimento() + clienteDto.getCpf());
         if(Objects.equals(clienteDao.incluirCliente(clienteDto), true)){
             LOGGER.log(Level.FINE, "Cliente incluído com sucesso no banco de dados.");
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -73,10 +81,13 @@ public class ClienteController {
             ClienteDto cliente = new ClienteDao().obterCliente(codigo);
             LOGGER.log(Level.FINE, "Cliente encontrado com sucesso.");
             return ResponseEntity.ok(cliente);
+        } catch (NullPointerException ex) {
+            LOGGER.log(Level.WARNING, "Não há registros no banco de dados.");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             LOGGER.log(Level.WARNING, "Ocorreu um erro ao buscar o cliente no banco de dados: "+e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

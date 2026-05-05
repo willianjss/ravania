@@ -1,23 +1,24 @@
 package com.ravania.api.dto;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 public class TransacaoDto {
     private int codigo;
     private LocalDateTime dataTransacao;
     private String status;
-    private Float valor;
+    private Double valor;
     private int cvv;
     private int numeroCartao;
+    private int clienteTransacao;
 
-    public TransacaoDto(int codigo, LocalDateTime dataTransacao, String status, Float valor, int cvv, int numeroCartao) {
+    public TransacaoDto(int codigo, LocalDateTime dataTransacao, String status, Double valor, int cvv, int numeroCartao, ClienteDto clienteTransacao) {
         this.codigo = codigo;
         this.dataTransacao = dataTransacao;
         this.status = status;
         this.valor = valor;
         this.cvv = cvv;
         this.numeroCartao = numeroCartao;
+        this.clienteTransacao = clienteTransacao.getCodigo();
     }
 
     public TransacaoDto() {
@@ -48,11 +49,11 @@ public class TransacaoDto {
         this.status = status;
     }
 
-    public Float getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(Float valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
@@ -71,4 +72,8 @@ public class TransacaoDto {
     public void setNumeroCartao(int numeroCartao) {
         this.numeroCartao = numeroCartao;
     }
+
+    public int getClienteTransacao() { return clienteTransacao; }
+
+    public void setClienteTransacao(int clienteTransacao) { this.clienteTransacao = clienteTransacao; }
 }

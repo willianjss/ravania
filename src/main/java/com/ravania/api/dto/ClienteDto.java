@@ -6,9 +6,9 @@ public class ClienteDto {
     private int codigo;
     private String nome;
     private Date dataNascimento;
-    private int cpf;
+    private String cpf;
 
-    public ClienteDto(int codigo, String nome, Date dataNascimento, int cpf) {
+    public ClienteDto(int codigo, String nome, Date dataNascimento, String cpf) {
         this.codigo = codigo;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
@@ -43,11 +43,11 @@ public class ClienteDto {
         this.dataNascimento = dataNascimento;
     }
 
-    public int getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(int cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 

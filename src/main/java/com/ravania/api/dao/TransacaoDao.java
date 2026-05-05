@@ -27,8 +27,9 @@ public class TransacaoDao extends DBConnect {
                 transacao.setDataTransacao(rst.getTimestamp("data_transacao").toLocalDateTime());
                 transacao.setCvv(rst.getInt("cvv"));
                 transacao.setStatus(rst.getString("status_transacao"));
-                transacao.setValor(rst.getFloat("valor_transacao"));
-                transacao.setNumeroCartao(rst.getInt("numeroCartao"));
+                transacao.setValor(rst.getDouble("valor_transacao"));
+                transacao.setNumeroCartao(rst.getInt("numero_cartao"));
+                transacao.setClienteTransacao(rst.getInt("cliente_transacao"));
                 listaTransacoes.add(transacao);
             }
             return listaTransacoes;
@@ -56,8 +57,9 @@ public class TransacaoDao extends DBConnect {
                 transacao.setDataTransacao(rst.getTimestamp("data_transacao").toLocalDateTime());
                 transacao.setCvv(rst.getInt("cvv"));
                 transacao.setStatus(rst.getString("status_transacao"));
-                transacao.setValor(rst.getFloat("valor_transacao"));
-                transacao.setNumeroCartao(rst.getInt("numeroCartao"));
+                transacao.setValor(rst.getDouble("valor_transacao"));
+                transacao.setNumeroCartao(rst.getInt("numero_cartao"));
+                transacao.setClienteTransacao(rst.getInt("cliente_transacao"));
                 listaTransacoes.add(transacao);
             }
             return listaTransacoes;
@@ -83,7 +85,7 @@ public class TransacaoDao extends DBConnect {
                 "status_transacao, " +
                 "valor_transacao, " +
                 "cvv, " +
-                "numeroCartao" +
+                "numero_cartao" +
                 ") VALUES (" +
                 //"'"+pTransacaoDto.getCodigo()+"', " +
                 "'"+pTransacaoDto.getDataTransacao()+"', " +

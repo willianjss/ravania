@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDateTime;
@@ -14,6 +16,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/transacoes")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class TransacaoController {
     public static final Logger LOGGER = Logger.getLogger(TransacaoController.class.getName());
 
@@ -31,21 +34,27 @@ public class TransacaoController {
                 ArrayList<TransacaoDto> listaTransacoes = new TransacaoDao().obterListaTransacoes();
                 LOGGER.log(Level.FINE,"Lista de transações retornada com sucesso.");
                 return ResponseEntity.ok(listaTransacoes);
+            } catch (NullPointerException ex) {
+                LOGGER.log(Level.WARNING, "Não há registros no banco de dados.");
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 assert LOGGER != null;
                 LOGGER.log(Level.WARNING, "Ocorreu um erro ao buscar as transações no banco de dados: "+e.getMessage());
-                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         } else {
             try {
                 ArrayList<TransacaoDto> listaTransacoes = new TransacaoDao().obterListaTransacoes(data);
                 LOGGER.log(Level.FINE,"Lista de transações retornada com sucesso.");
                 return ResponseEntity.ok(listaTransacoes);
+            } catch (NullPointerException ex) {
+                LOGGER.log(Level.WARNING, "Não há registros no banco de dados.");
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 LOGGER.log(Level.WARNING, "Ocorreu um erro ao buscar as transações no banco de dados: "+e.getMessage());
-                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         }
     }
@@ -62,16 +71,21 @@ public class TransacaoController {
     public ResponseEntity<TransacaoDto> incluirTransacao(@RequestBody final TransacaoDto transacaoDto){
         TransacaoDao transacaoDao = new TransacaoDao();
         transacaoDto.setDataTransacao(LocalDateTime.now());
+        List<String> status = new ArrayList<>(Arrays.asList("Ok", "Pendente", "Cancelada"));
         if(transacaoDto.getValor() <= -1){
             LOGGER.log(Level.WARNING,"O valor da transação deve ser positivo ou igual a zero.");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+        if(!status.contains(transacaoDto.getStatus())){
+            LOGGER.log(Level.WARNING,"O status não corresponde às possibilidades.");
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
         if(Objects.equals(transacaoDao.criarTransacao(transacaoDto), true)) {
             LOGGER.log(Level.FINE, "Transação incluída com sucesso no banco de dados.");
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
-            LOGGER.log(Level.WARNING, "Ocorreu um erro ao criar a transação.");
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            LOGGER.log(Level.SEVERE, "Ocorreu um erro ao criar a transação.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
